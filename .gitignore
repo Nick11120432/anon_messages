@@ -1,16 +1,45 @@
-# Cache files
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
 
-# Project files
-.idea/
-*.log
-.env
-venv
+# Virtual env
 .venv/
+<<<<<<< HEAD
 *.session
 database/config.py
 database/db.sqlite3
+=======
+venv/
+>>>>>>> 49ebe48 (update gitignore)
 
-# vscode
+# Env / secrets
+.env
+
+# Logs
+*.log
+
+# SQLite / local data
+database/*.sqlite3
+database/*.db
+*.session
+*.session-journal
+
+# IDE
+.idea/
 .vscode/
 .history/
+
+# Build/test artifacts
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
