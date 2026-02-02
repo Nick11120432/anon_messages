@@ -40,19 +40,18 @@ async def main():
     dp.include_routers(router, callback_router, donate_router)
     await dp.start_polling(bot)
 
-
 async def startup(bot: Bot):
-    print("starting....")
+    print("\033[32mstarting...\033[0m")
     await set_bot_commands(bot)
     await async_main()
 
 
 async def shutdown():
-    print("shutting down....")
+    print("\033[33mshutting down...\033[0m")
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("error shutting down!!!!")
+        print("\033[31mKeyboardInterrupt shutting down!\033[0m")
