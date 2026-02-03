@@ -1,9 +1,6 @@
 from callback_factory import AnswerCallbackFactory
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import (
-    ReplyKeyboardMarkup,
-    KeyboardButton,
-    InlineKeyboardMarkup,
     InlineKeyboardButton
 )
 

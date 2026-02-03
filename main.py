@@ -6,10 +6,8 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 from aiogram.types import BotCommand, BotCommandScopeDefault
-from handlers.handlers import router
-from handlers.callback_handlers import callback_router
-from handlers.donate_handlers import donate_router
-from database.models import async_main
+from handlers import router, callback_router, donate_router
+from database import async_main
 from config_reader import config
 
 logging.basicConfig(level=logging.INFO)
