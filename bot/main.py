@@ -6,7 +6,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 from aiogram.types import BotCommand, BotCommandScopeDefault
-from handlers import router, callback_router, donate_router
+from handlers import routers
 from database import async_main
 from config_reader import config
 
@@ -19,11 +19,14 @@ bot = Bot(
 
 redis_ip = config.redis_ip.get_secret_value()
 
+
 async def set_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Запустить бота 🚀"),
         BotCommand(command="profile", description="Моя ссылка 👤"),
-        BotCommand(command="donate", description="Помочь разработчику ⭐")
+        BotCommand(command="donate", description="Помочь разработчику ⭐"),
+        BotCommand(command="clean_blacklist", description="Очистить черный список ❌"),
+        BotCommand(command="feedback", description="Оставить отзыв 📝"),
     ]
     await bot.set_my_commands(commands=commands, scope=BotCommandScopeDefault())
 
@@ -35,8 +38,9 @@ async def main():
     )
     dp.startup.register(startup)
     dp.shutdown.register(shutdown)
-    dp.include_routers(router, callback_router, donate_router)
+    dp.include_routers(*routers)
     await dp.start_polling(bot)
+
 
 async def startup(bot: Bot):
     print("\033[32mstarting...\033[0m")

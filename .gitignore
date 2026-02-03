@@ -5,13 +5,9 @@ __pycache__/
 
 # Virtual env
 .venv/
-<<<<<<< HEAD
 *.session
 database/config.py
 database/db.sqlite3
-=======
-venv/
->>>>>>> 49ebe48 (update gitignore)
 
 # Env / secrets
 .env
