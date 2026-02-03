@@ -45,7 +45,7 @@ async def start_handler(message: Message, bot: Bot, state: FSMContext):
     if await requests.check_user_exists(user_id):
         link = await create_start_link(bot, f'{message.from_user.id}', encode=True)
         await message.answer(
-            "Твоя ссылка(Нажми на неё, чтобы скопировать):\n\n"
+            "Твоя ссылка:\n\n"
             f"<code>{link}</code>\n\n"
             "Cкопируй её в профиль и жди сообщений ;)",
             parse_mode=ParseMode.HTML
@@ -54,7 +54,7 @@ async def start_handler(message: Message, bot: Bot, state: FSMContext):
         link = await create_start_link(bot, f'{message.from_user.id}', encode=True)
         await requests.create_user_profile(user_id)
         await message.answer(
-            "Привет, рад видеть! Вот твоя новая ссылка(Нажми на неё, чтобы скопировать):\n\n"
+            "Привет, рад видеть! Вот твоя новая ссылка:\n\n"
             f"<code>{link}</code>\n\n"
             "Cкопируй её в профиль и жди сообщений ;)",
             parse_mode=ParseMode.HTML
