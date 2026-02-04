@@ -70,8 +70,9 @@ def feedback_text(firstname: str, id: int, username: str, text: str) -> str:
         f"Оставил текстовый отзыв:\n\n{text}"
     )
 
-def feedback_text_select_action(firstname: str) -> str:
-    return f"Выберите действие с пользователем {firstname}:"
+def feedback_text_select_action(firstname: str, id: int) -> str:
+    return f'id пользователя: {id}\n\n' \
+           f'Выберите действие с пользователем {firstname}:'
 
 # Донат
 DONATE_PROMPT_AMOUNT = "Введите сумму звезд, которую хотите отправить разработчику: 🥺"

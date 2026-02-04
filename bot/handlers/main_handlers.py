@@ -164,7 +164,6 @@ async def feedback_handler(message: Message, state: FSMContext):
 @main_router.message(states.Feedback_message.receive_feedback_message)
 async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
     """Получение и отправка отзыва администратору."""
-
     if not message.text:
         await message.answer(t.FEEDBACK_MESSAGE_INVALID)
         return
