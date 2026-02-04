@@ -180,7 +180,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
         if not chat_info.has_private_forwards:
             await message.forward(chat_id=1183927308)
             await bot.send_message(chat_id=1183927308, 
-                                   text=t.feedback_text_select_action(firstname=user.first_name), reply_markup=answer_button)
+                                   text=t.feedback_text_select_action(firstname=user.first_name, id=user.id), reply_markup=answer_button)
         else:
             await bot.send_message(chat_id=1183927308, text=t.feedback_text(
                 firstname=user.first_name,
