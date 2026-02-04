@@ -6,19 +6,20 @@ import texts as t
 
 
 async def create_answer_button(user_id, message_id):
+    """Создание клавиатуры с кнопками 'Ответить' и 'Заблокировать'."""
     builder = InlineKeyboardBuilder()
 
     builder.row(
         InlineKeyboardButton(
             text=t.BTN_BLOCK,
             callback_data=BlockCallback(
-                action="block", user_id=user_id, message_id=0
+                user_id=user_id
             ).pack(),
         ),
         InlineKeyboardButton(
             text=t.BTN_RESPOND,
             callback_data=RespondCallback(
-                action="respond", user_id=user_id, message_id=message_id
+                user_id=user_id, message_id=message_id
             ).pack(),
         ),
     )

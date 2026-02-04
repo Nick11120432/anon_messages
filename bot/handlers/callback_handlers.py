@@ -10,10 +10,11 @@ from callback_factory import RespondCallback, BlockCallback
 callback_router = Router()
 
 
-@callback_router.callback_query(RespondCallback.filter(F.action == "respond"))
+@callback_router.callback_query(RespondCallback.filter())
 async def handle_respond(
     callback: CallbackQuery, callback_data: RespondCallback, state: FSMContext
 ):
+    """Обработка нажатия кнопки 'Ответить'."""
     receiver_tg_id = callback_data.user_id
     message_id = callback_data.message_id
 
@@ -30,10 +31,11 @@ async def handle_respond(
     )
 
 
-@callback_router.callback_query(BlockCallback.filter(F.action == "block"))
+@callback_router.callback_query(BlockCallback.filter())
 async def handle_block(
     callback: CallbackQuery, callback_data: BlockCallback, state: FSMContext
 ):
-    receiver_tg_id = int(callback_data.user_id)
+    """Обработка нажатия кнопки 'Заблокировать'."""
+    receiver_tg_id = callback_data.user_id
     await requests.block_user(callback.from_user.id, receiver_tg_id)
     await callback.message.answer(t.USER_BLOCKED_OK)

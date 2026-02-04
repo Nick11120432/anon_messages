@@ -4,6 +4,7 @@ INVALID_LINK_OR_USER = (
     "Данного пользователя не существует или ссылка недействительна :C"
 )
 USER_BLOCKED_YOU = "К сожалению пользователь вас заблокировал :C"
+ADMIN_BLOCKED_YOU = "К сожалению администратор заблокировал вас :C"
 
 PROMPT_ANON_MESSAGE = "Введи сообщение, которое хочешь отправить анонимно: "
 PROMPT_REPLY_MESSAGE = "Введи сообщение которое хочешь отправить: "
@@ -69,6 +70,8 @@ def feedback_text(firstname: str, id: int, username: str, text: str) -> str:
         f"Оставил текстовый отзыв:\n\n{text}"
     )
 
+def feedback_text_select_action(firstname: str) -> str:
+    return f"Выберите действие с пользователем {firstname}:"
 
 # Донат
 DONATE_PROMPT_AMOUNT = "Введите сумму звезд, которую хотите отправить разработчику: 🥺"

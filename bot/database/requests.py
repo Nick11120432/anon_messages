@@ -19,9 +19,18 @@ async def check_user_exists(new_user_id: int) -> bool:
 
 
 async def block_user(owner_user_id: int, blocked_user_id: int) -> None:
-    """Блокировка пользователя blocked_user_id пользователем owner_user_id"""
+    """Блокировка пользователя blocked_user_id пользователем owner_user_id, если он ещё не заблокирован."""
     async with session_scope(commit=True) as session:
-        session.add(Blacklist(owner_id=owner_user_id, blocked_user_id=blocked_user_id))
+        exists = await session.scalar(
+            select(1)
+            .where(
+                Blacklist.owner_id == owner_user_id,
+                Blacklist.blocked_user_id == blocked_user_id,
+            )
+            .limit(1)
+        )
+        if exists is None:
+            session.add(Blacklist(owner_id=owner_user_id, blocked_user_id=blocked_user_id))
 
 
 async def clean_blacklist(owner_user_id: int) -> bool:

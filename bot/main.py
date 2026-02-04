@@ -12,6 +12,8 @@ from config_reader import config
 
 logging.basicConfig(level=logging.INFO)
 
+logger = logging.getLogger(__name__)
+
 bot = Bot(
     token=config.bot_token.get_secret_value(),
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
@@ -43,17 +45,17 @@ async def main():
 
 
 async def startup(bot: Bot):
-    print("\033[32mstarting...\033[0m")
+    logger.info("\033[32mstarting...\033[0m")
     await set_bot_commands(bot)
     await async_main()
 
 
 async def shutdown():
-    print("\033[33mshutting down...\033[0m")
+    logger.info("\033[33mshutting down...\033[0m")
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\033[31mKeyboardInterrupt shutting down!\033[0m")
+        logger.info("\033[31mKeyboardInterrupt shutting down!\033[0m")
