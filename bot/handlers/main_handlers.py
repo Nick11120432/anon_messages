@@ -155,7 +155,7 @@ async def feedback_handler(message: Message, state: FSMContext):
     ):
         await message.answer(t.ADMIN_BLOCKED_YOU)
         return
-    
+
     await state.set_state(states.Feedback_message.receive_feedback_message)
     await message.answer(t.FEEDBACK_MESSAGE)
     await state.update_data(receive_message=message.from_user.id)
@@ -179,15 +179,24 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
 
         if not chat_info.has_private_forwards:
             await message.forward(chat_id=1183927308)
-            await bot.send_message(chat_id=1183927308, 
-                                   text=t.feedback_text_select_action(firstname=user.first_name, id=user.id), reply_markup=answer_button)
+            await bot.send_message(
+                chat_id=1183927308,
+                text=t.feedback_text_select_action(
+                    firstname=user.first_name, id=user.id
+                ),
+                reply_markup=answer_button,
+            )
         else:
-            await bot.send_message(chat_id=1183927308, text=t.feedback_text(
-                firstname=user.first_name,
-                id=user.id,
-                username=user.username,
-                text=message.text),
-                reply_markup=answer_button)
+            await bot.send_message(
+                chat_id=1183927308,
+                text=t.feedback_text(
+                    firstname=user.first_name,
+                    id=user.id,
+                    username=user.username,
+                    text=message.text,
+                ),
+                reply_markup=answer_button,
+            )
 
     except TelegramBadRequest:
         await message.copy_to(chat_id=1183927308)
@@ -200,7 +209,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
 @main_router.message()
 async def start_handler(message: Message, bot: Bot, state: FSMContext):
     """Обработка обычного /start или любого другого сообщения."""
-    
+
     await state.clear()
     user_id = message.from_user.id
 

@@ -21,12 +21,14 @@ class Base(DeclarativeBase):
 
 class User(Base):
     """Модель пользователя."""
+
     __tablename__ = "users"
     user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)  # id в TG
 
 
 class Blacklist(Base):
     """Модель черного списка."""
+
     __tablename__ = "blacklist"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     owner_id: Mapped[int] = mapped_column(BigInteger)
