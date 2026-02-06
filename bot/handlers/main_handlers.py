@@ -3,7 +3,6 @@ from aiogram.types import Message
 from aiogram.utils.deep_linking import create_start_link, decode_payload
 from aiogram.filters import CommandStart, Command, CommandObject, StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramBadRequest
 
 import states as states
@@ -216,7 +215,7 @@ async def start_handler(message: Message, bot: Bot, state: FSMContext):
     link = await create_start_link(bot, f"{user_id}", encode=True)
 
     if await requests.check_user_exists(user_id):
-        await message.answer(t.my_link_full(link), parse_mode=ParseMode.HTML)
+        await message.answer(t.my_link_full(link))
     else:
         await requests.create_user_profile(user_id)
-        await message.answer(t.my_link_full_new(link), parse_mode=ParseMode.HTML)
+        await message.answer(t.my_link_full_new(link))
