@@ -126,7 +126,6 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
         )
         await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_video_note())
-        ...
 
     if message.sticker:
         await bot.send_sticker(
@@ -182,6 +181,73 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
+
+    if message.video:
+        caption = message.caption or ""
+        await bot.send_video(
+            chat_id=receiver_tg_id,
+            video=message.video.file_id,
+            caption=t.reply_video(caption),
+            reply_to_message_id=reply_to_message_id,
+            reply_markup=answer_button,
+            has_spoiler=True,
+        )
+
+    if message.animation:
+        caption = message.caption or ""
+        await bot.send_animation(
+            chat_id=receiver_tg_id,
+            animation=message.animation.file_id,
+            caption=t.reply_animation(caption),
+            reply_to_message_id=reply_to_message_id,
+            reply_markup=answer_button,
+            has_spoiler=True,
+        )
+
+    if message.document:
+        caption = message.caption or ""
+        await bot.send_document(
+            chat_id=receiver_tg_id,
+            document=message.document.file_id,
+            caption=t.reply_document(caption),
+            reply_to_message_id=reply_to_message_id,
+            reply_markup=answer_button,
+        )
+
+    if message.voice:
+        caption = message.caption or ""
+        await bot.send_voice(
+            chat_id=receiver_tg_id,
+            voice=message.voice.file_id,
+            caption=t.reply_voice(caption),
+            reply_to_message_id=reply_to_message_id,
+            reply_markup=answer_button,
+        )
+
+    if message.video_note:
+        await bot.send_video_note(
+            chat_id=receiver_tg_id,
+            video_note=message.video_note.file_id,
+            reply_to_message_id=reply_to_message_id,
+            reply_markup=answer_button,
+        )
+        await bot.send_message(
+            chat_id=receiver_tg_id,
+            text=t.reply_video_note(),
+            reply_to_message_id=reply_to_message_id,
+        )
+
+    if message.sticker:
+        await bot.send_sticker(
+            chat_id=receiver_tg_id,
+            sticker=message.sticker.file_id,
+            reply_markup=answer_button,
+        )
+        await bot.send_message(
+            chat_id=receiver_tg_id,
+            text=t.reply_sticker(),
+            reply_to_message_id=reply_to_message_id,
+        )
 
     caption = message.caption or ""
     await message.copy_to(
