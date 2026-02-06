@@ -1,10 +1,16 @@
 # Общие
 SELF_MESSAGE_FORBIDDEN = "Ой 😅 <b>Самому себе</b> отправить нельзя."
-INVALID_LINK_OR_USER = "Упс 😔 <b>Пользователь не найден</b> или ссылка <i>недействительна</i>."
-USER_BLOCKED_YOU = "Не получится 😕 <b>Пользователь</b> добавил вас в <i>чёрный список</i>."
+INVALID_LINK_OR_USER = (
+    "Упс 😔 <b>Пользователь не найден</b> или ссылка <i>недействительна</i>."
+)
+USER_BLOCKED_YOU = (
+    "Не получится 😕 <b>Пользователь</b> добавил вас в <i>чёрный список</i>."
+)
 ADMIN_BLOCKED_YOU = "К сожалению 😔 <b>Администратор</b> ограничил вам доступ."
 
-PROMPT_ANON_MESSAGE = "✉️ <b>Напиши сообщение</b>, которое хочешь отправить <i>анонимно</i>:"
+PROMPT_ANON_MESSAGE = (
+    "✉️ <b>Напиши сообщение</b>, которое хочешь отправить <i>анонимно</i>:"
+)
 PROMPT_REPLY_MESSAGE = "💬 <b>Напиши ответ</b>, который хочешь отправить:"
 FEEDBACK_MESSAGE = "📝 <b>Оставь отзыв</b> (только текстом):"
 
@@ -15,8 +21,7 @@ BLACKLIST_CLEANED = "🧹 <b>Чёрный список очищен!</b>"
 BLACKLIST_EMPTY = "📭 <i>Чёрный список пуст.</i>"
 
 USER_BLOCKED_OK = (
-    "🚫 <b>Пользователь заблокирован.</b>\n"
-    "🔓 Разблокировать: /clean_blacklist"
+    "🚫 <b>Пользователь заблокирован.</b>\n🔓 Разблокировать: /clean_blacklist"
 )
 
 FEEDBACK_RECEIVED = "Спасибо за отзыв! ❤️ <i>Мы обязательно посмотрим.</i>"
@@ -49,47 +54,37 @@ def my_link_short(link: str) -> str:
 
 # Получатель: входящие сообщения
 def incoming_text(text: str) -> str:
-    return (
-        "📩 <b>Тебе пришло анонимное сообщение</b>\n"
-        "━━━━━━━━━━━━━━\n\n"
-        f"{text}"
-    )
+    return f"📩 <b>Тебе пришло анонимное сообщение</b>\n━━━━━━━━━━━━━━\n\n{text}"
 
 
 def incoming_photo(caption: str = "") -> str:
     caption = (caption or "").strip()
     if caption:
-        return (
-            "🖼️ <b>Тебе прислали изображение</b>\n"
-            "━━━━━━━━━━━━━━\n\n"
-            f"<i>{caption}</i>"
-        )
+        return f"🖼️ <b>Тебе прислали изображение</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
     return "🖼️ <b>Тебе прислали изображение</b>."
 
 
 # Получатель: ответы
 def reply_text(text: str) -> str:
-    return (
-        "↩️ <b>Тебе ответили</b> на сообщение\n"
-        "━━━━━━━━━━━━━━\n\n"
-        f"{text}"
-    )
+    return f"↩️ <b>Тебе ответили</b> на сообщение\n━━━━━━━━━━━━━━\n\n{text}"
 
 
 def reply_photo(caption: str = "") -> str:
     caption = (caption or "").strip()
     if caption:
         return (
-            "↩️ <b>Тебе ответили изображением</b>\n"
-            "━━━━━━━━━━━━━━\n\n"
-            f"<i>{caption}</i>"
+            f"↩️ <b>Тебе ответили изображением</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
         )
     return "↩️ <b>Тебе ответили изображением</b>."
 
 
 # Обратная связь (HTML)
 def feedback_text(firstname: str, id: int, username: str, text: str) -> str:
-    username_line = f"@{username}" if username and username != "(no username)" else "<i>не указан</i>"
+    username_line = (
+        f"@{username}"
+        if username and username != "(no username)"
+        else "<i>не указан</i>"
+    )
     return (
         "📝 <b>Новый отзыв</b>\n"
         "━━━━━━━━━━━━━━\n"
@@ -112,7 +107,9 @@ def feedback_text_select_action(firstname: str, id: int) -> str:
 
 
 # Донат (HTML)
-DONATE_PROMPT_AMOUNT = "⭐️ <b>Сколько звёзд</b> хочешь отправить разработчику? <i>(введи число)</i> 🥺"
+DONATE_PROMPT_AMOUNT = (
+    "⭐️ <b>Сколько звёзд</b> хочешь отправить разработчику? <i>(введи число)</i> 🥺"
+)
 DONATE_BAD_AMOUNT = "⚠️ Введи, пожалуйста, <b>число</b> от 1 до <code>100000</code>."
 
 INVOICE_TITLE = "Поддержать разработчика 💛"
