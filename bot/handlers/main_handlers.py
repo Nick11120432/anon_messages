@@ -11,7 +11,7 @@ import keyboards as keyboards
 import database.requests as requests
 import texts as t
 
-ADMIN_CHAT_ID = config.admin_chat_id
+ADMIN_CHAT_ID = config.get("admin_chat_id")
 
 
 main_router = Router()
