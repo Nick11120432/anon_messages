@@ -107,7 +107,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             chat_id=receiver_tg_id,
             text=t.reply_text(message.text),
             reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
+            reply_markup=answer_button
         )
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
@@ -120,8 +120,9 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             chat_id=receiver_tg_id,
             photo=photo.file_id,
             caption=t.reply_photo(caption),
+            reply_to_message_id=reply_to_message_id,
             reply_markup=answer_button,
-            has_spoiler=True,
+            has_spoiler=True
         )
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
@@ -132,6 +133,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
         chat_id=receiver_tg_id,
         caption=t.reply_text(caption),
         reply_markup=answer_button,
+        reply_to_message_id=reply_to_message_id
     )
     await message.answer(t.REPLY_SENT_OK)
     await state.clear()

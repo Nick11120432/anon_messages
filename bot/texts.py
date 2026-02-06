@@ -16,7 +16,7 @@ BLACKLIST_EMPTY = "📭 <i>Чёрный список пуст.</i>"
 
 USER_BLOCKED_OK = (
     "🚫 <b>Пользователь заблокирован.</b>\n"
-    "🔓 Разблокировать: <code>/clean_blacklist</code>"
+    "🔓 Разблокировать: /clean_blacklist"
 )
 
 FEEDBACK_RECEIVED = "Спасибо за отзыв! ❤️ <i>Мы обязательно посмотрим.</i>"
