@@ -90,6 +90,9 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
             has_spoiler=True,
         )
+        await message.answer(t.SENT_OK)
+        await state.clear()
+        return
 
     if message.animation:
         caption = message.caption or ""
@@ -100,6 +103,9 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
             has_spoiler=True,
         )
+        await message.answer(t.SENT_OK)
+        await state.clear()
+        return
 
     if message.document:
         caption = message.caption or ""
@@ -109,6 +115,9 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             caption=t.incoming_document(caption),
             reply_markup=answer_button,
         )
+        await message.answer(t.SENT_OK)
+        await state.clear()
+        return
 
     if message.voice:
         caption = message.caption or ""
@@ -118,6 +127,9 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             caption=t.incoming_voice(caption),
             reply_markup=answer_button,
         )
+        await message.answer(t.SENT_OK)
+        await state.clear()
+        return
 
     if message.video_note:
         await bot.send_video_note(
@@ -126,6 +138,9 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
         )
         await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_video_note())
+        await message.answer(t.SENT_OK)
+        await state.clear()
+        return
 
     if message.sticker:
         await bot.send_sticker(
@@ -134,15 +149,18 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
         )
         await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_sticker())
-
-        caption = message.caption or ""
-        await message.copy_to(
-            chat_id=receiver_tg_id,
-            caption=t.incoming_text(caption),
-            reply_markup=answer_button,
-        )
         await message.answer(t.SENT_OK)
         await state.clear()
+        return
+
+    caption = message.caption or ""
+    await message.copy_to(
+        chat_id=receiver_tg_id,
+        caption=t.incoming_text(caption),
+        reply_markup=answer_button,
+    )
+    await message.answer(t.SENT_OK)
+    await state.clear()
 
 
 @main_router.message(states.Answer_message.receive_answer_message)
@@ -192,6 +210,9 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
             has_spoiler=True,
         )
+        await message.answer(t.REPLY_SENT_OK)
+        await state.clear()
+        return
 
     if message.animation:
         caption = message.caption or ""
@@ -203,6 +224,9 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             reply_markup=answer_button,
             has_spoiler=True,
         )
+        await message.answer(t.REPLY_SENT_OK)
+        await state.clear()
+        return
 
     if message.document:
         caption = message.caption or ""
@@ -213,6 +237,9 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             reply_to_message_id=reply_to_message_id,
             reply_markup=answer_button,
         )
+        await message.answer(t.REPLY_SENT_OK)
+        await state.clear()
+        return
 
     if message.voice:
         caption = message.caption or ""
@@ -223,6 +250,9 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             reply_to_message_id=reply_to_message_id,
             reply_markup=answer_button,
         )
+        await message.answer(t.REPLY_SENT_OK)
+        await state.clear()
+        return
 
     if message.video_note:
         await bot.send_video_note(
@@ -233,21 +263,26 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
         )
         await bot.send_message(
             chat_id=receiver_tg_id,
-            text=t.reply_video_note(),
-            reply_to_message_id=reply_to_message_id,
+            text=t.reply_video_note()
         )
+        await message.answer(t.REPLY_SENT_OK)
+        await state.clear()
+        return
 
     if message.sticker:
         await bot.send_sticker(
             chat_id=receiver_tg_id,
             sticker=message.sticker.file_id,
+            reply_to_message_id=reply_to_message_id,            
             reply_markup=answer_button,
         )
         await bot.send_message(
             chat_id=receiver_tg_id,
             text=t.reply_sticker(),
-            reply_to_message_id=reply_to_message_id,
         )
+        await message.answer(t.REPLY_SENT_OK)
+        await state.clear()
+        return
 
     caption = message.caption or ""
     await message.copy_to(
