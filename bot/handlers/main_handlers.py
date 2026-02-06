@@ -57,6 +57,16 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
         message.from_user.id, message.message_id
     )
 
+    if message.text:
+        await bot.send_message(
+            chat_id=receiver_tg_id,
+            text=t.incoming_text(message.text),
+            reply_markup=answer_button,
+        )
+        await message.answer(t.SENT_OK)
+        await state.clear()
+        return
+
     if message.photo:
         caption = message.caption or ""
         photo = message.photo[-1]
@@ -71,24 +81,69 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
         await state.clear()
         return
 
-    if message.text:
-        await bot.send_message(
+    if message.video:
+        caption = message.caption or ""
+        await bot.send_video(
             chat_id=receiver_tg_id,
-            text=t.incoming_text(message.text),
+            video=message.video.file_id,
+            caption=t.incoming_video(caption),
+            reply_markup=answer_button,
+            has_spoiler=True,  # ✅ поддерживается
+        )
+
+    if message.animation:
+        caption = message.caption or ""
+        await bot.send_animation(
+            chat_id=receiver_tg_id,
+            animation=message.animation.file_id,
+            caption=t.incoming_animation(caption),
+            reply_markup=answer_button,
+            has_spoiler=True,  # ✅ поддерживается
+        )
+
+    if message.document:
+        caption = message.caption or ""
+        await bot.send_document(
+            chat_id=receiver_tg_id,
+            document=message.document.file_id,
+            caption=t.incoming_document(caption),
+            reply_markup=answer_button,
+        )
+
+    if message.voice:
+        caption = message.caption or ""
+        await bot.send_voice(
+            chat_id=receiver_tg_id,
+            voice=message.voice.file_id,
+            caption=t.incoming_voice(caption),
+            reply_markup=answer_button,
+        )
+
+    if message.video_note:
+        await bot.send_video_note(
+            chat_id=receiver_tg_id,
+            video_note=message.video_note.file_id,
+            reply_markup=answer_button,
+        )
+        await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_video_note())
+        ...
+
+    if message.sticker:
+        await bot.send_sticker(
+            chat_id=receiver_tg_id,
+            sticker=message.sticker.file_id,
+            reply_markup=answer_button,
+        )
+        await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_sticker())
+
+        caption = message.caption or ""
+        await message.copy_to(
+            chat_id=receiver_tg_id,
+            caption=t.incoming_text(caption),
             reply_markup=answer_button,
         )
         await message.answer(t.SENT_OK)
         await state.clear()
-        return
-
-    caption = message.caption or ""
-    await message.copy_to(
-        chat_id=receiver_tg_id,
-        caption=t.incoming_text(caption),
-        reply_markup=answer_button,
-    )
-    await message.answer(t.SENT_OK)
-    await state.clear()
 
 
 @main_router.message(states.Answer_message.receive_answer_message)
@@ -152,7 +207,7 @@ async def clean_blacklist(message: Message, state: FSMContext):
 async def feedback_handler(message: Message, state: FSMContext):
     """Начало процесса отправки отзыва."""
     if await requests.check_if_user_blocked(
-        owner_user_id=8582132507, blocked_user_id=message.from_user.id
+        owner_user_id=1183927308, blocked_user_id=message.from_user.id
     ):
         await message.answer(t.ADMIN_BLOCKED_YOU)
         return
@@ -179,9 +234,9 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
         chat_info = await bot.get_chat(user.id)
 
         if not chat_info.has_private_forwards:
-            await message.forward(chat_id=8582132507)
+            await message.forward(chat_id=1183927308)
             await bot.send_message(
-                chat_id=8582132507,
+                chat_id=1183927308,
                 text=t.feedback_text_select_action(
                     firstname=user.first_name, id=user.id
                 ),
@@ -189,7 +244,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
             )
         else:
             await bot.send_message(
-                chat_id=8582132507,
+                chat_id=1183927308,
                 text=t.feedback_text(
                     firstname=user.first_name,
                     id=user.id,
@@ -200,7 +255,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
             )
 
     except TelegramBadRequest:
-        await message.copy_to(chat_id=8582132507)
+        await message.copy_to(chat_id=1183927308)
 
     await message.answer(t.FEEDBACK_RECEIVED)
     await state.clear()

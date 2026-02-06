@@ -64,6 +64,42 @@ def incoming_photo(caption: str = "") -> str:
     return "🖼️ <b>Тебе прислали изображение</b>."
 
 
+def incoming_video(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"🎬 <b>Тебе прислали видео</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "🎬 <b>Тебе прислали видео</b>."
+
+
+def incoming_animation(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"🪩 <b>Тебе прислали GIF</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "🪩 <b>Тебе прислали GIF</b>."
+
+
+def incoming_document(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"📎 <b>Тебе прислали файл</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "📎 <b>Тебе прислали файл</b>."
+
+
+def incoming_voice(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"🎤 <b>Тебе прислали голосовое</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "🎤 <b>Тебе прислали голосовое</b>."
+
+
+def incoming_video_note() -> str:
+    return "📼 <b>Тебе прислали кружочек</b>."
+
+
+def incoming_sticker() -> str:
+    return "🧩 <b>Тебе прислали стикер</b>."
+
+
 # Получатель: ответы
 def reply_text(text: str) -> str:
     return f"↩️ <b>Тебе ответили</b> на сообщение\n━━━━━━━━━━━━━━\n\n{text}"
@@ -76,6 +112,42 @@ def reply_photo(caption: str = "") -> str:
             f"↩️ <b>Тебе ответили изображением</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
         )
     return "↩️ <b>Тебе ответили изображением</b>."
+
+
+def reply_video(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"↩️ <b>Тебе ответили видео</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "↩️ <b>Тебе ответили видео</b>."
+
+
+def reply_animation(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"↩️ <b>Тебе ответили GIF</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "↩️ <b>Тебе ответили GIF</b>."
+
+
+def reply_document(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"↩️ <b>Тебе ответили файлом</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "↩️ <b>Тебе ответили файлом</b>."
+
+
+def reply_voice(caption: str = "") -> str:
+    caption = (caption or "").strip()
+    if caption:
+        return f"↩️ <b>Тебе ответили голосовым</b>\n━━━━━━━━━━━━━━\n\n<i>{caption}</i>"
+    return "↩️ <b>Тебе ответили голосовым</b>."
+
+
+def reply_video_note() -> str:
+    return "↩️ <b>Тебе ответили кружочком</b>."
+
+
+def reply_sticker() -> str:
+    return "↩️ <b>Тебе ответили стикером</b>."
 
 
 # Обратная связь (HTML)
