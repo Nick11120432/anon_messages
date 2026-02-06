@@ -1,4 +1,3 @@
-from logging import config
 from aiogram import Router, Bot
 from aiogram.types import Message
 from aiogram.utils.deep_linking import create_start_link, decode_payload
@@ -10,6 +9,7 @@ import states as states
 import keyboards as keyboards
 import database.requests as requests
 import texts as t
+from config_reader import config
 
 ADMIN_CHAT_ID = config.get("admin_chat_id")
 
