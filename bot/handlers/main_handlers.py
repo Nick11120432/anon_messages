@@ -88,7 +88,7 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             video=message.video.file_id,
             caption=t.incoming_video(caption),
             reply_markup=answer_button,
-            has_spoiler=True,  # ✅ поддерживается
+            has_spoiler=True,
         )
 
     if message.animation:
@@ -98,7 +98,7 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
             animation=message.animation.file_id,
             caption=t.incoming_animation(caption),
             reply_markup=answer_button,
-            has_spoiler=True,  # ✅ поддерживается
+            has_spoiler=True,
         )
 
     if message.document:
