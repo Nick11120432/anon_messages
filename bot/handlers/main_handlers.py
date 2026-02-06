@@ -207,7 +207,7 @@ async def clean_blacklist(message: Message, state: FSMContext):
 async def feedback_handler(message: Message, state: FSMContext):
     """Начало процесса отправки отзыва."""
     if await requests.check_if_user_blocked(
-        owner_user_id=1183927308, blocked_user_id=message.from_user.id
+        owner_user_id=8582132507, blocked_user_id=message.from_user.id
     ):
         await message.answer(t.ADMIN_BLOCKED_YOU)
         return
@@ -234,9 +234,9 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
         chat_info = await bot.get_chat(user.id)
 
         if not chat_info.has_private_forwards:
-            await message.forward(chat_id=1183927308)
+            await message.forward(chat_id=8582132507)
             await bot.send_message(
-                chat_id=1183927308,
+                chat_id=8582132507,
                 text=t.feedback_text_select_action(
                     firstname=user.first_name, id=user.id
                 ),
@@ -244,7 +244,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
             )
         else:
             await bot.send_message(
-                chat_id=1183927308,
+                chat_id=8582132507,
                 text=t.feedback_text(
                     firstname=user.first_name,
                     id=user.id,
@@ -255,7 +255,7 @@ async def receive_feedback(message: Message, state: FSMContext, bot: Bot):
             )
 
     except TelegramBadRequest:
-        await message.copy_to(chat_id=1183927308)
+        await message.copy_to(chat_id=8582132507)
 
     await message.answer(t.FEEDBACK_RECEIVED)
     await state.clear()
