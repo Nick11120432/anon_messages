@@ -1,6 +1,7 @@
 import logging
 import asyncio
 import redis.asyncio as aioredis
+
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -9,8 +10,14 @@ from aiogram.types import BotCommand, BotCommandScopeDefault
 from handlers import routers
 from database import async_main
 from config_reader import config
+from rich.logging import RichHandler
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(message)s",
+    datefmt="[%X]",
+    handlers=[RichHandler(rich_tracebacks=True)],
+)
 
 logger = logging.getLogger(__name__)
 
@@ -45,17 +52,17 @@ async def main():
 
 
 async def startup(bot: Bot):
-    logger.info("\033[32mstarting...\033[0m")
+    logger.info("Starting up...")
     await set_bot_commands(bot)
     await async_main()
 
 
 async def shutdown():
-    logger.info("\033[33mshutting down...\033[0m")
+    logger.warning("Shutting down...")
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        logger.info("\033[31mKeyboardInterrupt shutting down!\033[0m")
+        logger.error("KeyboardInterrupt shutting down!")

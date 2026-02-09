@@ -1,10 +1,11 @@
+import states as states
+import texts as t
+
 from aiogram import Router, Bot
 from aiogram.types import Message, LabeledPrice, PreCheckoutQuery
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
-import states as states
-import texts as t
 
 donate_router = Router()
 

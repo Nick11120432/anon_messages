@@ -1,3 +1,10 @@
+import states as states
+import keyboards as keyboards
+import database.requests as requests
+import texts as t
+from config_reader import config
+from utils import safe_telegram_call
+
 from aiogram import Router, Bot
 from aiogram.types import Message
 from aiogram.utils.deep_linking import create_start_link, decode_payload
@@ -5,11 +12,6 @@ from aiogram.filters import CommandStart, Command, CommandObject, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.exceptions import TelegramBadRequest
 
-import states as states
-import keyboards as keyboards
-import database.requests as requests
-import texts as t
-from config_reader import config
 
 ADMIN_CHAT_ID = config.admin_chat_id
 
@@ -62,107 +64,169 @@ async def send_anonymous_message(message: Message, state: FSMContext, bot: Bot):
     )
 
     if message.text:
-        await bot.send_message(
-            chat_id=receiver_tg_id,
-            text=t.incoming_text(message.text),
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_message(
+                    chat_id=receiver_tg_id,
+                    text=t.incoming_text(message.text),
+                    reply_markup=answer_button,
+                )
+            )
+            == "BotBlocked"
+        ):
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.photo:
-        caption = message.caption or ""
-        photo = message.photo[-1]
-        await bot.send_photo(
-            chat_id=receiver_tg_id,
-            photo=photo.file_id,
-            caption=t.incoming_photo(caption),
-            reply_markup=answer_button,
-            has_spoiler=True,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_photo(
+                    chat_id=receiver_tg_id,
+                    photo=message.photo[-1].file_id,
+                    caption=t.incoming_photo(message.caption or ""),
+                    reply_markup=answer_button,
+                    has_spoiler=True,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.video:
-        caption = message.caption or ""
-        await bot.send_video(
-            chat_id=receiver_tg_id,
-            video=message.video.file_id,
-            caption=t.incoming_video(caption),
-            reply_markup=answer_button,
-            has_spoiler=True,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_video(
+                    chat_id=receiver_tg_id,
+                    video=message.video.file_id,
+                    caption=t.incoming_video(message.caption or ""),
+                    reply_markup=answer_button,
+                    has_spoiler=True,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.animation:
-        caption = message.caption or ""
-        await bot.send_animation(
-            chat_id=receiver_tg_id,
-            animation=message.animation.file_id,
-            caption=t.incoming_animation(caption),
-            reply_markup=answer_button,
-            has_spoiler=True,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_animation(
+                    chat_id=receiver_tg_id,
+                    animation=message.animation.file_id,
+                    caption=t.incoming_animation(message.caption or ""),
+                    reply_markup=answer_button,
+                    has_spoiler=True,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.document:
-        caption = message.caption or ""
-        await bot.send_document(
-            chat_id=receiver_tg_id,
-            document=message.document.file_id,
-            caption=t.incoming_document(caption),
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_document(
+                    chat_id=receiver_tg_id,
+                    document=message.document.file_id,
+                    caption=t.incoming_document(message.caption or ""),
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.voice:
-        caption = message.caption or ""
-        await bot.send_voice(
-            chat_id=receiver_tg_id,
-            voice=message.voice.file_id,
-            caption=t.incoming_voice(caption),
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_voice(
+                    chat_id=receiver_tg_id,
+                    voice=message.voice.file_id,
+                    caption=t.incoming_voice(message.caption or ""),
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.video_note:
-        await bot.send_video_note(
-            chat_id=receiver_tg_id,
-            video_note=message.video_note.file_id,
-            reply_markup=answer_button,
-        )
-        await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_video_note())
+        if (
+            await safe_telegram_call(
+                bot.send_video_note(
+                    chat_id=receiver_tg_id,
+                    video_note=message.video_note.file_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
     if message.sticker:
-        await bot.send_sticker(
-            chat_id=receiver_tg_id,
-            sticker=message.sticker.file_id,
-            reply_markup=answer_button,
-        )
-        await bot.send_message(chat_id=receiver_tg_id, text=t.incoming_sticker())
+        if (
+            await safe_telegram_call(
+                bot.send_sticker(
+                    chat_id=receiver_tg_id,
+                    sticker=message.sticker.file_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+
         await message.answer(t.SENT_OK)
         await state.clear()
         return
 
-    caption = message.caption or ""
-    await message.copy_to(
-        chat_id=receiver_tg_id,
-        caption=t.incoming_text(caption),
-        reply_markup=answer_button,
-    )
+    if (
+        await message.copy_to(
+            chat_id=receiver_tg_id,
+            caption=t.incoming_text(message.caption or ""),
+            reply_markup=answer_button,
+        )
+    ) == "BotBlocked":
+        await message.answer(t.USER_BLOCKED_BOT)
+        await state.clear()
+        return
+
     await message.answer(t.SENT_OK)
     await state.clear()
 
@@ -179,104 +243,283 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
     )
 
     if message.text:
-        await bot.send_message(
-            chat_id=receiver_tg_id,
-            text=t.reply_text(message.text),
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_message(
+                    chat_id=receiver_tg_id,
+                    text=t.reply_text(message.text),
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_message(
+                    chat_id=receiver_tg_id,
+                    text=t.reply_text(message.text),
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_message(
+                chat_id=receiver_tg_id,
+                text=t.reply_text(message.text),
+            )
+
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.photo:
-        caption = message.caption or ""
-        photo = message.photo[-1]
-        await bot.send_photo(
-            chat_id=receiver_tg_id,
-            photo=photo.file_id,
-            caption=t.reply_photo(caption),
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-            has_spoiler=True,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_photo(
+                    chat_id=receiver_tg_id,
+                    photo=message.photo[-1].file_id,
+                    caption=t.reply_photo(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                    has_spoiler=True,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_photo(
+                    chat_id=receiver_tg_id,
+                    photo=message.photo[-1].file_id,
+                    caption=t.reply_photo(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_photo(
+                chat_id=receiver_tg_id,
+                photo=message.photo[-1].file_id,
+                caption=t.reply_photo(message.caption or ""),
+                has_spoiler=True,
+            )
+
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.video:
-        caption = message.caption or ""
-        await bot.send_video(
-            chat_id=receiver_tg_id,
-            video=message.video.file_id,
-            caption=t.reply_video(caption),
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-            has_spoiler=True,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_video(
+                    chat_id=receiver_tg_id,
+                    video=message.video.file_id,
+                    caption=t.reply_video(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                    has_spoiler=True,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_video(
+                    chat_id=receiver_tg_id,
+                    video=message.video.file_id,
+                    caption=t.reply_video(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_video(
+                chat_id=receiver_tg_id,
+                video=message.video.file_id,
+                caption=t.reply_video(message.caption or ""),
+                has_spoiler=True,
+            )
+
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.animation:
-        caption = message.caption or ""
-        await bot.send_animation(
-            chat_id=receiver_tg_id,
-            animation=message.animation.file_id,
-            caption=t.reply_animation(caption),
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-            has_spoiler=True,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_animation(
+                    chat_id=receiver_tg_id,
+                    animation=message.animation.file_id,
+                    caption=t.reply_animation(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                    has_spoiler=True,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_animation(
+                    chat_id=receiver_tg_id,
+                    animation=message.animation.file_id,
+                    caption=t.reply_animation(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_animation(
+                chat_id=receiver_tg_id,
+                animation=message.animation.file_id,
+                caption=t.reply_animation(message.caption or ""),
+                has_spoiler=True,
+            )
+
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.document:
-        caption = message.caption or ""
-        await bot.send_document(
-            chat_id=receiver_tg_id,
-            document=message.document.file_id,
-            caption=t.reply_document(caption),
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_document(
+                    chat_id=receiver_tg_id,
+                    document=message.document.file_id,
+                    caption=t.reply_document(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_document(
+                    chat_id=receiver_tg_id,
+                    document=message.document.file_id,
+                    caption=t.reply_document(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_document(
+                chat_id=receiver_tg_id,
+                document=message.document.file_id,
+                caption=t.reply_document(message.caption or ""),
+                has_spoiler=True,
+            )
+
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.voice:
-        caption = message.caption or ""
-        await bot.send_voice(
-            chat_id=receiver_tg_id,
-            voice=message.voice.file_id,
-            caption=t.reply_voice(caption),
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_voice(
+                    chat_id=receiver_tg_id,
+                    voice=message.voice.file_id,
+                    caption=t.reply_voice(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_voice(
+                    chat_id=receiver_tg_id,
+                    voice=message.voice.file_id,
+                    caption=t.reply_voice(message.caption or ""),
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_voice(
+                chat_id=receiver_tg_id,
+                voice=message.voice.file_id,
+                caption=t.reply_voice(message.caption or ""),
+                has_spoiler=True,
+            )
+
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.video_note:
-        await bot.send_video_note(
-            chat_id=receiver_tg_id,
-            video_note=message.video_note.file_id,
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_video_note(
+                    chat_id=receiver_tg_id,
+                    video_note=message.video_note.file_id,
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_video_note(
+                    chat_id=receiver_tg_id,
+                    video_note=message.video_note.file_id,
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_video_note(
+                chat_id=receiver_tg_id,
+                video_note=message.video_note.file_id,
+                has_spoiler=True,
+            )
+
         await bot.send_message(chat_id=receiver_tg_id, text=t.reply_video_note())
         await message.answer(t.REPLY_SENT_OK)
         await state.clear()
         return
 
     if message.sticker:
-        await bot.send_sticker(
-            chat_id=receiver_tg_id,
-            sticker=message.sticker.file_id,
-            reply_to_message_id=reply_to_message_id,
-            reply_markup=answer_button,
-        )
+        if (
+            await safe_telegram_call(
+                bot.send_sticker(
+                    chat_id=receiver_tg_id,
+                    sticker=message.sticker.file_id,
+                    reply_to_message_id=reply_to_message_id,
+                    reply_markup=answer_button,
+                )
+            )
+        ) == "BotBlocked":
+            await message.answer(t.USER_BLOCKED_BOT)
+            await state.clear()
+            return
+        elif (
+            await safe_telegram_call(
+                bot.send_sticker(
+                    chat_id=receiver_tg_id,
+                    sticker=message.sticker.file_id,
+                    reply_to_message_id=reply_to_message_id,
+                )
+            )
+        ) == "RespondMessageDeleted":
+            await bot.send_sticker(
+                chat_id=receiver_tg_id,
+                sticker=message.sticker.file_id,
+                has_spoiler=True,
+            )
+
         await bot.send_message(
             chat_id=receiver_tg_id,
             text=t.reply_sticker(),
@@ -285,13 +528,34 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
         await state.clear()
         return
 
-    caption = message.caption or ""
-    await message.copy_to(
-        chat_id=receiver_tg_id,
-        caption=t.reply_text(caption),
-        reply_markup=answer_button,
-        reply_to_message_id=reply_to_message_id,
-    )
+    if (
+        await safe_telegram_call(
+            message.copy_to(
+                chat_id=receiver_tg_id,
+                caption=t.reply_text(message.caption or ""),
+                reply_markup=answer_button,
+                reply_to_message_id=reply_to_message_id,
+            )
+        )
+    ) == "BotBlocked":
+        await message.answer(t.USER_BLOCKED_BOT)
+        await state.clear()
+        return
+    elif (
+        await safe_telegram_call(
+            message.copy_to(
+                chat_id=receiver_tg_id,
+                caption=t.reply_text(message.caption or ""),
+                reply_to_message_id=reply_to_message_id,
+            )
+        )
+    ) == "RespondMessageDeleted":
+        await message.copy_to(
+            chat_id=receiver_tg_id,
+            caption=t.reply_text(message.caption or ""),
+            reply_markup=answer_button,
+        )
+
     await message.answer(t.REPLY_SENT_OK)
     await state.clear()
 

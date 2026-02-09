@@ -1,11 +1,12 @@
-from aiogram import Router
-from aiogram.types import CallbackQuery
-from aiogram.fsm.context import FSMContext
-
 import states as states
 import database.requests as requests
 import texts as t
+
+from aiogram import Router
+from aiogram.types import CallbackQuery
+from aiogram.fsm.context import FSMContext
 from callback_factory import RespondCallback, BlockCallback
+
 
 callback_router = Router()
 
