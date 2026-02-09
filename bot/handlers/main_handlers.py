@@ -256,7 +256,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_message(
                     chat_id=receiver_tg_id,
@@ -290,7 +290,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_photo(
                     chat_id=receiver_tg_id,
@@ -327,7 +327,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_video(
                     chat_id=receiver_tg_id,
@@ -364,7 +364,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_animation(
                     chat_id=receiver_tg_id,
@@ -400,7 +400,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_document(
                     chat_id=receiver_tg_id,
@@ -436,7 +436,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_voice(
                     chat_id=receiver_tg_id,
@@ -471,7 +471,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_video_note(
                     chat_id=receiver_tg_id,
@@ -505,7 +505,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
             await message.answer(t.USER_BLOCKED_BOT)
             await state.clear()
             return
-        elif (
+        if (
             await safe_telegram_call(
                 bot.send_sticker(
                     chat_id=receiver_tg_id,
@@ -541,7 +541,7 @@ async def send_reply_message(message: Message, state: FSMContext, bot: Bot):
         await message.answer(t.USER_BLOCKED_BOT)
         await state.clear()
         return
-    elif (
+    if (
         await safe_telegram_call(
             message.copy_to(
                 chat_id=receiver_tg_id,
