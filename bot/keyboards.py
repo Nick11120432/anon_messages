@@ -13,12 +13,14 @@ async def create_answer_button(user_id, message_id):
         InlineKeyboardButton(
             text=t.BTN_BLOCK,
             callback_data=BlockCallback(user_id=user_id).pack(),
+            style="danger",
         ),
         InlineKeyboardButton(
             text=t.BTN_RESPOND,
             callback_data=RespondCallback(
                 user_id=user_id, message_id=message_id
             ).pack(),
+            style="success",
         ),
     )
     return builder.as_markup()
