@@ -357,8 +357,8 @@ async def send_reply_sticker(message: Message, state: FSMContext, bot: Bot):
 
 
 @answer_message_router.message(states.Answer_message.receive_answer_message)
-async def send_reply_fallback(message: Message, state: FSMContext):
-    """Обработка сообщений с другими типами контента анонимно."""
+async def send_reply_fallback(message: Message, state: FSMContext, bot: Bot):
+    """Обработка других типов сообщений (audio, contact, location, etc.)."""
     data = await state.get_data()
     receiver_tg_id = data["receive_answer_message"]
     reply_to_message_id = int(data["message_id"])
@@ -370,7 +370,6 @@ async def send_reply_fallback(message: Message, state: FSMContext):
     result = await safe_send_message(
         message.copy_to,
         chat_id=receiver_tg_id,
-        caption=t.reply_text(message.caption or ""),
         reply_markup=answer_button,
         reply_to_message_id=reply_to_message_id,
     )
@@ -385,12 +384,17 @@ async def send_reply_fallback(message: Message, state: FSMContext):
             await safe_send_message(
                 message.copy_to,
                 chat_id=receiver_tg_id,
-                caption=t.reply_text(message.caption or ""),
                 reply_markup=answer_button,
             )
 
         case _:
             pass
+
+    await safe_send_message(
+        bot.send_message,
+        chat_id=receiver_tg_id,
+        text=t.reply_text(message.text or ""),
+    )
 
     await message.answer(t.REPLY_SENT_OK)
     await state.clear()

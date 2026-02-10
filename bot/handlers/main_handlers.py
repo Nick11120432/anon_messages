@@ -17,23 +17,6 @@ ADMIN_CHAT_ID = config.admin_chat_id
 
 main_router = Router()
 
-
-@main_router.message(CommandStart(deep_link=False), StateFilter("*"))
-@main_router.message(Command("profile"))
-async def start_handler(message: Message, bot: Bot, state: FSMContext):
-    """Обработка обычного /start и /profile"""
-
-    await state.clear()
-    user_id = message.from_user.id
-
-    link = await create_start_link(bot, f"{user_id}", encode=True)
-
-    if await requests.check_user_exists(user_id):
-        await message.answer(t.my_link_full(link))
-    else:
-        await requests.create_user_profile(user_id)
-        await message.answer(t.my_link_full_new(link))
-
         
 @main_router.message(CommandStart(deep_link=True), StateFilter("*"))
 async def start_handler_with_link(
@@ -67,6 +50,22 @@ async def start_handler_with_link(
     await message.answer(t.PROMPT_ANON_MESSAGE)
     await state.set_state(states.Send_message.receive_message)
     await state.update_data(receive_message=payload)
+
+@main_router.message(CommandStart(deep_link=False), StateFilter("*"))
+@main_router.message(Command("profile"))
+async def start_handler(message: Message, bot: Bot, state: FSMContext):
+    """Обработка обычного /start и /profile"""
+
+    await state.clear()
+    user_id = message.from_user.id
+
+    link = await create_start_link(bot, f"{user_id}", encode=True)
+
+    if await requests.check_user_exists(user_id):
+        await message.answer(t.my_link_full(link))
+    else:
+        await requests.create_user_profile(user_id)
+        await message.answer(t.my_link_full_new(link))
 
 
 @main_router.message(Command("clean_blacklist"), StateFilter("*"))
