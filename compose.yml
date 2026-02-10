@@ -2,6 +2,8 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    tty: true
+    stdin_open: true
 
   bot:
     build: .
@@ -12,3 +14,5 @@ services:
       - /opt/anonimki-data:/app/data
     depends_on:
       - redis
+    tty: true
+    stdin_open: true

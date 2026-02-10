@@ -34,7 +34,7 @@ async def global_error_handler(event: ErrorEvent) -> bool:
 
     # 429 Too Many Requests
     if isinstance(exc, TelegramRetryAfter):
-        logger.warning("\033[33mTelegramRetryAfter: %s sec ", exc.retry_after)
+        logger.warning("TelegramRetryAfter: %s sec ", exc.retry_after)
         # В error handler повторять запрос нельзя (мы не знаем какой запрос), но можно чуть подождать
         await asyncio.sleep(min(exc.retry_after, 5))
         return True

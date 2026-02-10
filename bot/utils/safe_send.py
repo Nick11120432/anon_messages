@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Any, Awaitable, Callable
 
 from aiogram.exceptions import (
     TelegramForbiddenError,
@@ -9,22 +10,35 @@ from aiogram.exceptions import (
 
 logger = logging.getLogger(__name__)
 
+TelegramCallable = Callable[..., Awaitable[Any]]
 
-async def safe_telegram_call(coroutine):
+
+async def safe_send_message(fn: TelegramCallable, /, **kwargs) -> str | None:
     """
-    Выполняет Telegram API вызов и аккуратно обрабатывает типовые ошибки:
-    - Forbidden: бот заблокирован / чат недоступен / пользователь удален
-    - RetryAfter: лимиты Telegram (429)
-    - BadRequest: некорректный запрос (reply_to не существует)
+    Безопасно выполняет Telegram API вызов (fn(**kwargs)) и обрабатывает типовые ошибки.
+
+    Возвращает:
+      - "BotBlocked"            -> Forbidden (бот заблокирован / чат недоступен / пользователь удалён)
+      - "RespondMessageDeleted" -> BadRequest (обычно reply_to_message_id не существует)
+      - None                    -> успех
     """
     try:
-        return await coroutine
+        await fn(**kwargs)
+        return None
 
     except TelegramRetryAfter as e:
-        # Telegram просит подождать ровно retry_after секунд
         logger.warning("RetryAfter=%s", e.retry_after)
         await asyncio.sleep(e.retry_after)
-        return await coroutine
+
+        try:
+            await fn(**kwargs)
+            return None
+        except TelegramForbiddenError:
+            logger.warning("Forbidden after retry: bot blocked or chat unavailable")
+            return "BotBlocked"
+        except TelegramBadRequest as e2:
+            logger.warning("BadRequest after retry: %s", e2)
+            return "RespondMessageDeleted"
 
     except TelegramForbiddenError:
         # Пользователь заблокировал бота или чат недоступен
@@ -32,5 +46,6 @@ async def safe_telegram_call(coroutine):
         return "BotBlocked"
 
     except TelegramBadRequest as e:
+        # Пользователь удалил сообщение оригинальное сообщение
         logger.warning("BadRequest: %s", e)
         return "RespondMessageDeleted"

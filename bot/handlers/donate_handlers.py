@@ -3,14 +3,14 @@ import texts as t
 
 from aiogram import Router, Bot
 from aiogram.types import Message, LabeledPrice, PreCheckoutQuery
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 
 
 donate_router = Router()
 
 
-@donate_router.message(Command("donate"))
+@donate_router.message(Command("donate"), StateFilter("*"))
 async def cmd_donate(message: Message, state: FSMContext):
     """Обработка команды /donate и запрос суммы для доната."""
     await message.answer(t.DONATE_PROMPT_AMOUNT)

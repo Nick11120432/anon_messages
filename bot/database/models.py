@@ -23,7 +23,9 @@ class User(Base):
     """Модель пользователя."""
 
     __tablename__ = "users"
-    user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)  # id в TG
+    user_id: Mapped[int] = mapped_column(
+        BigInteger, primary_key=True
+    )  # user_id в Telegram
 
 
 class Blacklist(Base):
@@ -31,8 +33,12 @@ class Blacklist(Base):
 
     __tablename__ = "blacklist"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    owner_id: Mapped[int] = mapped_column(BigInteger)
-    blocked_user_id: Mapped[int] = mapped_column(BigInteger)
+    owner_id: Mapped[int] = mapped_column(
+        BigInteger
+    )  # user_id владельца черного списка
+    blocked_user_id: Mapped[int] = mapped_column(
+        BigInteger
+    )  # user_id заблокированного пользователя
 
 
 @asynccontextmanager

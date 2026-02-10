@@ -20,7 +20,7 @@ async def create_answer_button(user_id, message_id):
             callback_data=RespondCallback(
                 user_id=user_id, message_id=message_id
             ).pack(),
-            style="success",
+            style="primary",
         ),
     )
     return builder.as_markup()
