@@ -17,7 +17,7 @@ ADMIN_CHAT_ID = config.admin_chat_id
 
 main_router = Router()
 
-        
+
 @main_router.message(CommandStart(deep_link=True), StateFilter("*"))
 async def start_handler_with_link(
     message: Message, command: CommandObject, state: FSMContext
@@ -50,6 +50,7 @@ async def start_handler_with_link(
     await message.answer(t.PROMPT_ANON_MESSAGE)
     await state.set_state(states.Send_message.receive_message)
     await state.update_data(receive_message=payload)
+
 
 @main_router.message(CommandStart(deep_link=False), StateFilter("*"))
 @main_router.message(Command("profile"))
