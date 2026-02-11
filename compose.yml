@@ -9,7 +9,7 @@ services:
     build: .
     restart: unless-stopped
     env_file:
-      - /opt/anonimki-bot/.env
+      - /opt/anonimki-bot/bot/.env
     volumes:
       - /opt/anonimki-data:/app/data
     depends_on:
